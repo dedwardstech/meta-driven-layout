@@ -1,0 +1,44 @@
+{
+  "name": "@mdl/mantine",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./form": {
+      "types": "./dist/form/index.d.ts",
+      "default": "./dist/form/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mdl/core": "workspace:*",
+    "@mdl/react": "workspace:*"
+  },
+  "peerDependencies": {
+    "@mantine/core": "^8.3.5",
+    "react": "catalog:",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.87.0"
+  },
+  "devDependencies": {
+    "@mantine/core": "^8.3.5",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.87.0",
+    "tsdown": "catalog:",
+    "typescript": "catalog:"
+  }
+}

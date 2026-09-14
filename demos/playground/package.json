@@ -1,0 +1,29 @@
+{
+  "name": "@mdl/playground",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mantine/core": "^8.3.5",
+    "@monaco-editor/react": "^4.7.0",
+    "@mdl/mantine": "workspace:*",
+    "@mdl/react": "workspace:*",
+    "@mdl/exp": "workspace:*",
+    "monaco-editor": "^0.52.2",
+    "react": "catalog:",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^5.0.4",
+    "typescript": "catalog:",
+    "vite": "^7.1.7"
+  }
+}
