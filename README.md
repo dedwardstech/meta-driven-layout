@@ -24,6 +24,7 @@ Describe user interfaces as typed, serializable trees of layouts, forms, fields,
 | [`@mdl/react`](packages/react/README.md) | `packages/react` | React 18 renderer, unstyled default layouts and fields, and React Hook Form integration. |
 | [`@mdl/mantine`](packages/mantine/README.md) | `packages/mantine` | Mantine 8 implementations of every built-in layout and field. |
 | `@mdl/playground` | `demos/playground` | Vite app with a live JSON editor and Mantine preview. |
+| `@mdl/testing` | `testing` | Playwright component tests that render whole layouts through each registry. |
 
 ```mermaid
 graph LR
@@ -190,8 +191,9 @@ Workspace packages resolve each other through their built `dist` output. Build b
 | Start the playground | `pnpm --filter @mdl/playground dev` |
 | Typecheck every package | `pnpm -r typecheck` |
 | Run the expression engine tests | `pnpm --filter @mdl/exp test` |
+| Run the layout component tests | `pnpm --filter @mdl/testing test` |
 
-`@mdl/exp` has a Vitest suite. `@mdl/core` has type-level tests in `src/__tests__/*.test-d.ts`, which use `@ts-expect-error` assertions and run as part of `typecheck`.
+`@mdl/exp` has a Vitest suite. `@mdl/core` has type-level tests in `src/__tests__/*.test-d.ts`, which use `@ts-expect-error` assertions and run as part of `typecheck`. `@mdl/testing` renders complete layouts in a real browser; see [Component tests](#component-tests).
 
 Libraries are bundled with [tsdown](https://tsdown.dev) as ESM with type declarations.
 
@@ -204,6 +206,28 @@ The playground is a two-pane editor. The left pane has two files:
 
 The right pane renders the result with `@mdl/mantine` and keeps the last valid preview visible while the documents contain errors.
 
+### Component tests
+
+`testing/` uses [Playwright component testing](https://playwright.dev/docs/test-components) to mount whole layouts instead of individual components. Each tree in `testing/src/layouts` exercises the renderer, registry, and rules together:
+
+| Layout | Harness | Covers |
+| --- | --- | --- |
+| `dashboard` | `LayoutHarness` | Components and layouts with no form: tagged components, and rules that read `env` or `values` passed straight to the renderer. |
+| `contact` | `FormHarness` | A flat form: defaults, editing, submitting, and `readOnly`. |
+| `profile` | `FormHarness` | Nested grids, layout rules that read `env` and form values, field rules that read their own value, and two nodes bound to one field. |
+| `workspace-settings` | `FormHarness` | Components, tagged registrations, `onMissing="null"`, ordered component rules, and every field type across three levels of nesting. |
+
+`testing/src/harness.tsx` exports two harnesses. `LayoutHarness` renders a tree with `MDLRenderer` alone. `FormHarness` wraps it in `MDLForm`, feeds the form's values back into the rules as they change, and adds a submit button. Every spec runs once per Playwright project: `react` uses `defaultReactRegistry` and `mantine` uses `defaultMantineRegistry`. Both are extended with test-only `heading`, `notice`, and `stat` components, an `urgent`-tagged notice, and a `secret`-tagged string field. Specs read the `registry` fixture when an interaction differs between the two.
+
+```sh
+pnpm -r build
+pnpm --filter @mdl/testing exec playwright install chromium
+pnpm --filter @mdl/testing test
+pnpm --filter @mdl/testing test --project mantine
+```
+
+Props passed to `mount` cross from Node into the browser, so layouts, defaults, and `env` must be plain data. Register implementations in the harness rather than passing a registry from a spec.
+
 ## Project layout
 
 ```
@@ -215,6 +239,7 @@ The right pane renders the result with `@mdl/mantine` and keeps the last valid p
 │   └── mantine/      @mdl/mantine: Mantine layouts and fields
 ├── demos/
 │   └── playground/   Vite playground with Monaco editor and live preview
+├── testing/          @mdl/testing: Playwright component tests for whole layouts
 ├── package.json
 └── pnpm-workspace.yaml
 ```

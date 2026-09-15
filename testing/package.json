@@ -1,0 +1,22 @@
+{
+  "name": "@mdl/testing",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test -c playwright-ct.config.ts",
+    "test:ui": "playwright test -c playwright-ct.config.ts --ui",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@mantine/core": "^8.3.5",
+    "@mdl/mantine": "workspace:*",
+    "@mdl/react": "workspace:*",
+    "@playwright/experimental-ct-react": "^1.62.1",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.87.0",
+    "typescript": "catalog:"
+  }
+}

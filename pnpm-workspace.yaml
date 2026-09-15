@@ -1,6 +1,7 @@
 packages:
   - "demos/*"
   - "packages/*"
+  - "testing"
 
 allowBuilds:
   esbuild: true
